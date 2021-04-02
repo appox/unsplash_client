@@ -20,6 +20,7 @@ class Collection extends ModelBase {
   final int totalPhotos;
   final bool private;
   final String? shareKey;
+  final List<Tag>? tags;
   final CollectionLinks links;
 
   const Collection({
@@ -34,6 +35,7 @@ class Collection extends ModelBase {
     required this.totalPhotos,
     required this.private,
     required this.shareKey,
+    required this.tags,
     required this.links,
   });
 
@@ -51,6 +53,7 @@ class Collection extends ModelBase {
       'total_photos': totalPhotos,
       'private': private,
       'share_key': shareKey,
+      'tags': tags?.map((tag) => tag.toJson()).toList(),
       'links': links.toJson(),
     };
   }
@@ -70,6 +73,10 @@ class Collection extends ModelBase {
       totalPhotos: json['total_photos'] as int,
       private: json['private'] as bool,
       shareKey: json['shared_key'] as String?,
+      tags: (json['tags'] as List<dynamic>?)
+          ?.cast<Map<String, dynamic>>()
+          .map((json) => Tag.fromJson(json))
+          .toList(),
       links: (json['links'] as Map<String, dynamic>)
           .let((it) => CollectionLinks.fromJson(it)),
     );
