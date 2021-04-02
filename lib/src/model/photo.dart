@@ -62,6 +62,7 @@ class Photo extends ModelBase {
     required this.width,
     required this.height,
     required this.color,
+    required this.blurHash,
     required this.downloads,
     required this.likes,
     required this.likedByUser,
@@ -81,6 +82,7 @@ class Photo extends ModelBase {
   final int width;
   final int height;
   final String color;
+  final String blurHash;
   final int? downloads;
   final int likes;
   final bool likedByUser;
@@ -104,6 +106,7 @@ class Photo extends ModelBase {
       'width': width,
       'height': height,
       'color': color,
+      'blur_hash': blurHash,
       'downloads': downloads,
       'likes': likes,
       'liked_by_user': likedByUser,
@@ -128,6 +131,7 @@ class Photo extends ModelBase {
         width: json['width'] as int,
         height: json['height'] as int,
         color: json['color'] as String,
+        blurHash: json['blur_hash'] as String,
         downloads: json['downloads'] as int?,
         likes: json['likes'] as int,
         likedByUser: json['liked_by_user'] as bool,
