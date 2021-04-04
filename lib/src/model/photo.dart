@@ -159,20 +159,24 @@ class Photo extends ModelBase {
 class Tag extends ModelBase {
   const Tag({
     required this.title,
+    required this.type,
   });
 
   final String title;
+  final String? type;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'title': title,
+      'type': type,
     };
   }
 
   factory Tag.fromJson(Map<String, dynamic> map) {
     return Tag(
       title: map['title'] as String,
+      type: map['type'] as String,
     );
   }
 }
