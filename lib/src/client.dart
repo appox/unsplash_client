@@ -18,11 +18,15 @@ class ClientSettings {
   /// [credentials] must not be `null`.
   const ClientSettings({
     required this.credentials,
+    this.authToken,
     this.debug = false,
   });
 
   /// The credentials used by the [UnsplashClient] to authenticate the app.
   final AppCredentials credentials;
+
+  /// oauth access token for the user
+  final String? authToken;
 
   /// Whether to log debug information.
   final bool debug;
@@ -38,10 +42,11 @@ class ClientSettings {
       other is ClientSettings &&
           runtimeType == other.runtimeType &&
           credentials == other.credentials &&
+          authToken == other.authToken &&
           maxPageSize == other.maxPageSize;
 
   @override
-  int get hashCode => credentials.hashCode ^ maxPageSize.hashCode;
+  int get hashCode => credentials.hashCode ^ (authToken ?? '').hashCode ^ maxPageSize.hashCode;
 
   @override
   String toString() {
@@ -230,9 +235,16 @@ class Request<T> {
     }
 
     // Auth
-    // TODO implement oauth
-    assert(isPublicAction);
-    headers.addAll(_publicActionAuthHeader(client.settings.credentials));
+    if (isPublicAction) {
+      headers.addAll(_publicActionAuthHeader(client.settings.credentials));
+    } else {
+      final authToken = client.settings.authToken;
+      if (authToken == null) {
+        throw StateError('Authentication required');
+      }
+
+      headers.addAll(_privateActionAuthHeader(authToken));
+    }
 
     return headers;
   }
@@ -359,6 +371,10 @@ extension RequestExtension<T> on Request<T> {
 
 Map<String, String> _publicActionAuthHeader(AppCredentials credentials) {
   return {'Authorization': 'Client-ID ${credentials.accessKey}'};
+}
+
+Map<String, String> _privateActionAuthHeader(String token) {
+  return {'Authorization': 'Bearer $token'};
 }
 
 Map<String, String> _sanitizeHeaders(Map<String, String> headers) {
