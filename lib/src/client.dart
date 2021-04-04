@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 
 import 'app_credentials.dart';
 import 'collections.dart';
+import 'current_user.dart';
 import 'photos.dart';
 import 'search.dart';
 import 'stats.dart';
@@ -76,6 +77,9 @@ class UnsplashClient {
 
   /// The [ClientSettings] used by this client.
   final ClientSettings settings;
+
+  /// Provides access to current (login-)user related to [User].
+  CurrentUser get currentUser => CurrentUser(this);
 
   /// Provides access to resources related to [User].
   Users get users => Users(this);
